@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Soil Images</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Global reset and font settings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('{{ url_for('static', filename='view_bg.jpg') }}') no-repeat center center fixed, 
+                        linear-gradient(to right, #e8f5e9, #d0f1d5);
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header styling */
+        .header {
+            font-family: 'Times New Roman', sans-serif;
+            background: linear-gradient(135deg, #3d52a0, #6573c3); /* Updated gradient with a modern look */
+            padding: 20px;
+            text-align: center;
+            font-size: 45px; /* Keep this font size for desktop */
+            font-weight: bold;
+            color: white;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header img {
+            height: 50px;
+            margin-right: 0px;
+        }
+
+        /* Home button styling */
+        .home-button {
+            background-color: #3d52a0;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .home-button:hover {
+            color: white;
+            background-color: #588a44;
+        }
+
+        .home-button i {
+            font-size: 14px;
+        }
+
+        /* Container for layout */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Image card styling */
+        .image-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Result text styling */
+        .result-text {
+            font-size: 18px; /* Keep this font size for desktop */
+            color: #555;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header {
+                font-size: 28px; /* Adjust header font size for mobile */
+            }
+
+            .result-text {
+                font-size: 16px; /* Adjust result text font size for mobile */
+            }
+
+            .image-card {
+                width: 100%; /* Full width on mobile */
+                max-width: 300px; /* Max width for larger screens */
+            }
+
+            .container {
+                flex-direction: column; /* Stack cards vertically on small screens */
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="{{ url_for('static', filename='cs.png') }}" alt="Logo" height="50">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" height="50">
+        View Uploaded Soil Images
+        <!-- Home Button on the right corner -->
+        <a href="/" class="home-button">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </div>
+
+    <div class="container">
+        {% for image in images %}
+        <div class="image-card">
+            <img src="{{ image.image_url }}" alt="Soil Image" class="image-preview">
+            <div class="result-text">
+                <strong>Soil Type:</strong> {{ image.soil_type | default("Unknown") }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/js/fontawesome.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>

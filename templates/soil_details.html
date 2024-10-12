@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #d79e9e;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header img {
+            height: 40px;
+        }
+        .container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .image-container {
+            position: relative;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .close-button, .delete-button {
+            position: absolute;
+            top: 10px;
+            cursor: pointer;
+        }
+        .close-button {
+            left: 10px;
+        }
+        .delete-button {
+            right: 10px;
+        }
+        .details-section {
+            margin-top: 20px;
+            width: 100%;
+        }
+        .details-section .row {
+            margin-bottom: 10px;
+        }
+        .details-section .col {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .decision-support {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .decision-support button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #d79e9e;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        Automated Soil Type Identification and Quality Assessment
+        <a href="{{ url_for('home') }}" class="btn btn-outline-light">HOME</a>
+    </div>
+
+    <div class="container">
+        <div class="image-container">
+            <a href="{{ url_for('home') }}" class="close-button">CLOSE</a>
+            <a href="{{ url_for('delete_image', image_id=image.id) }}" class="delete-button">DELETE</a>
+            <img src="{{ image.image_url }}" alt="{{ image.filename }}">
+            <div class="text-center mt-2">
+                <strong>{{ image.filename }}</strong>
+            </div>
+        </div>
+        <div class="details-section">
+            <div class="row">
+                <div class="col">SOIL TYPE:</div>
+                <div class="col">{{ image.soil_type }}</div>
+            </div>
+            <div class="row">
+                <div class="col">SOIL QUALITY:</div>
+                <div class="col">{{ image.soil_quality }}</div>
+            </div>
+            <div class="row">
+                <div class="col">NITROGEN:</div>
+                <div class="col">{{ image.nitrogen }}</div>
+            </div>
+            <div class="row">
+                <div class="col">PHOSPHORUS:</div>
+                <div class="col">{{ image.phosphorus }}</div>
+            </div>
+            <div class="row">
+                <div class="col">POTASSIUM:</div>
+                <div class="col">{{ image.potassium }}</div>
+            </div>
+        </div>
+        <div class="decision-support">
+            <button>DECISION SUPPORT</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Soil Images</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('{{ url_for('static', filename='upload_bg.jpg') }}') no-repeat center center fixed, 
+                        linear-gradient(to right, #e8f5e9, #d0f1d5);
+            background-size: cover;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .header {
+            font-family: 'Times New Roman', sans-serif;
+            background: linear-gradient(135deg, #3d52a0, #6573c3);
+            padding: 20px;
+            text-align: center;
+            font-size: 45px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header img {
+            height: 100px;
+            margin: 0 10px;
+        }
+
+        .home-button {
+            background-color: #3d52a0;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+        }
+
+        .home-button:hover {
+            color: white;
+            background-color: #588a44;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin: 30px auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        .column {
+            flex: 1;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h5 {
+            font-size: 22px;
+            color: #555;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result-box {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .result-box:hover {
+            background-color: #f7f7f7;
+        }
+
+        #decision-support-box {
+            margin-top: 15px;
+            background-color: #eef7ee;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <img src="{{ url_for('static', filename='cs.png') }}" alt="Logo">
+            Automated Soil Type Identification and Quality Assessment
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        </div>
+
+        <a href="/" class="home-button">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Column 1: Upload Soil Images -->
+        <div class="column">
+            <h5>UPLOAD SOIL IMAGES</h5>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" class="form-control-file" id="image" name="image" required>
+                </div>
+                <div class="preview-container">
+                    <img id="image-preview" class="image-preview" src="" alt="Image Preview">
+                </div>
+                <button type="submit" class="btn btn-primary mt-4">UPLOAD IMAGE</button>
+            </form>
+        </div>
+
+        <!-- Column 2: Soil Type Info -->
+        <div class="column">
+            <h5>SOIL TYPE INFO</h5>
+            <div class="result-box">
+                <strong>SOIL TYPE:</strong> <span id="soil-type">waiting for upload...</span>
+            </div>
+            <div class="result-box">
+                <strong>CONFIDENCE LEVEL:</strong> <span id="confidence-level">waiting for upload...</span>
+            </div>
+            <div class="result-box">
+                <strong>SOIL QUALITY:</strong> <span id="soil-quality">waiting for upload...</span>
+            </div>
+            <div class="d-flex justify-content-between flex-wrap">
+                <div class="result-box">
+                    <strong>NITROGEN:</strong> <span id="nitrogen">---</span>
+                </div>
+                <div class="result-box">
+                    <strong>PHOSPHORUS:</strong> <span id="phosphorus">---</span>
+                </div>
+                <div class="result-box">
+                    <strong>POTASSIUM:</strong> <span id="potassium">---</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 3: Decision Support -->
+        <div class="column">
+            <h5>DECISION SUPPORT</h5>
+            <div class="result-box" id="decision-support-box" style="display: none;">
+                <p><strong>Best Crops:</strong> <span id="best-crops">---</span></p>
+                <p><strong>Season:</strong> <span id="season">---</span></p>
+                <p><strong>Fertilizer Needed:</strong> <span id="fertilizer">---</span></p>
+                <p><strong>Optimal ph:</strong> <span id="optimal-ph">---</span></p>
+                <p><strong>Common Issues:</strong> <span id="common-issues">---</span></p>
+                <p><strong>Management Practices:</strong> <span id="management-practices">---</span></p>
+                <p><strong>Additional Info:</strong> <span id="additional-info">---</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/js/fontawesome.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#image').on('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#image-preview').attr('src', e.target.result).show();
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $('#upload-form').on('submit', function (e) {
+                e.preventDefault();
+                let formData = new FormData(this);
+                $.ajax({
+                    type: 'POST',
+                    url: '/upload-image',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $('#soil-type').text(response.top_prediction || "Unknown");
+                        $('#confidence-level').text((response.confidence_level * 100).toFixed(2) + '%' || "Confidence level unavailable");
+                        $('#soil-quality').text(response.soil_quality || "Quality not determined");
+                        $('#nitrogen').text(response.npk_values.nitrogen || "N/A");
+                        $('#phosphorus').text(response.npk_values.phosphorus || "N/A");
+                        $('#potassium').text(response.npk_values.potassium || "N/A");
+
+                        if (response.decision_support) {
+                            $('#decision-support-box').show();
+                            $('#best-crops').text(response.decision_support.best_crops || "---");
+                            $('#season').text(response.decision_support.season || "---");
+                            $('#fertilizer').text(response.decision_support.fertilizer || "---");
+                            $('#optimal-ph').text(response.decision_support.optimal_ph || "---");
+                            $('#common-issues').text(response.decision_support.common_issues || "---");
+                            $('#management-practices').text(response.decision_support.management_practices || "---");
+                            $('#additional-info').text(response.decision_support.additional_info || "---");
+                        } else {
+                            $('#decision-support-box').hide();
+                        }
+                    },
+                    error: function () {
+                        alert('Uploaded Soil Image has low confidence level, please select another image and try again :)');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
